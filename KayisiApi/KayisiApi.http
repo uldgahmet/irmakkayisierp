@@ -1,0 +1,6 @@
+@KayisiApi_HostAddress = http://localhost:5054
+
+GET {{KayisiApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+</head>
+<body>
+
+<h1>Ürün Ekle</h1>
+
+<input type="file" id="imageFile"><br><br>
+<input type="text" id="name" placeholder="Ürün adı"><br><br>
+<input type="number" id="price" placeholder="Fiyat"><br><br>
+<input type="text" id="image" placeholder="Resim URL"><br><br>
+
+<button onclick="ekle()">Ürün Ekle</button>
+
+<script>
+async function ekle() {
+
+    const file = document.getElementById("imageFile").files[0];
+
+    let imageUrl = "";
+
+    // 1. RESMİ YÜKLE
+    if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const uploadRes = await fetch("http://localhost:5054/api/Products/upload", {
+            method: "POST",
+            body: formData
+        });
+
+        const uploadData = await uploadRes.json();
+        imageUrl = uploadData.imageUrl;
+    }
+
+    // 2. ÜRÜN EKLE
+    fetch("http://localhost:5054/api/Products", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name: document.getElementById("name").value,
+            price: parseFloat(document.getElementById("price").value),
+            imageUrl: imageUrl
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert("Eklendi!");
+    });
+}
+</script>
+
+</body>
+</html>
